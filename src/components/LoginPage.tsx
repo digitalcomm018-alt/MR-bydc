@@ -136,94 +136,134 @@ export const LoginPage: React.FC = () => {
       <div className="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 flex-1 flex flex-col justify-center">
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* LEFT COLUMN: Brand Hero & Value Props */}
-          <div className="lg:col-span-6 space-y-6 sm:space-y-8">
-            
-            {/* Top Brand Logo */}
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-700 to-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/25 ring-4 ring-blue-400/20">
-                  <Shield className="w-7 h-7 fill-white/20 stroke-[2.2]" />
+          {/* LEFT COLUMN: Brand Hero & Value Props (Image 1 Color Curved Background) */}
+          <div className="lg:col-span-6 relative rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl overflow-hidden border-2 border-amber-300/60 bg-[#c2185b] text-white">
+            {/* Image 1 Curved Graphic Background SVG */}
+            <svg
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              preserveAspectRatio="none"
+              viewBox="0 0 500 650"
+            >
+              {/* Base Magenta/Purple Background */}
+              <rect width="500" height="650" fill="#ad1457" />
+
+              {/* Bottom Left Vector Wave Lines */}
+              <g stroke="#e91e63" strokeWidth="1.2" fill="none" opacity="0.4">
+                <path d="M-50,650 C80,550 200,620 320,550 C400,500 450,530 500,510" />
+                <path d="M-50,620 C80,520 200,590 320,520 C400,470 450,500 500,480" />
+                <path d="M-50,590 C80,490 200,560 320,490 C400,440 450,470 500,450" />
+                <path d="M-50,560 C80,460 200,530 320,460 C400,410 450,440 500,420" />
+                <path d="M-50,530 C80,430 200,500 320,430 C400,380 450,410 500,390" />
+              </g>
+
+              {/* Bold Red Curved Stripe */}
+              <path
+                d="M 0,0 C 120,180 250,400 500,580 L 500,650 L 0,650 Z"
+                fill="#d32f2f"
+              />
+
+              {/* White Crisp Arc Divider Line */}
+              <path
+                d="M 120,0 C 230,190 350,380 505,530"
+                fill="none"
+                stroke="#ffffff"
+                strokeWidth="9"
+              />
+
+              {/* Top Right Orange Section */}
+              <path
+                d="M 128,0 C 238,190 358,380 515,530 L 500,0 Z"
+                fill="#ff9800"
+              />
+            </svg>
+
+            {/* Content Container */}
+            <div className="relative z-10 space-y-6 sm:space-y-8">
+              {/* Top Brand Logo */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md text-white flex items-center justify-center shadow-lg border border-white/40 ring-4 ring-white/20">
+                    <Shield className="w-7 h-7 fill-white/30 stroke-[2.2]" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white font-sans drop-shadow-md">
+                      MR Connect
+                    </h1>
+                    <p className="text-xs sm:text-sm font-extrabold text-amber-100 tracking-wide drop-shadow-xs">
+                      Smarter Visits. Stronger Relationships. Better Outcomes.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-blue-950 font-sans">
-                    MR Connect
-                  </h1>
-                  <p className="text-xs sm:text-sm font-semibold text-blue-800/90 tracking-wide">
-                    Smarter Visits. Stronger Relationships. Better Outcomes.
-                  </p>
+              </div>
+
+              {/* Main Headline */}
+              <div className="space-y-2">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight drop-shadow-lg">
+                  Empowering Medical Representatives
+                </h2>
+                <p className="text-lg sm:text-xl font-black text-amber-200 drop-shadow-md">
+                  Driving Healthcare Impact Every Day
+                </p>
+              </div>
+
+              {/* 4 Feature Cards */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-lg text-center space-y-1.5 hover:scale-[1.02] transition-transform">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-900 mx-auto flex items-center justify-center">
+                    <Users className="w-5 h-5 text-amber-800" />
+                  </div>
+                  <div className="text-xs font-black text-slate-950 leading-tight">Plan Visits</div>
                 </div>
+
+                <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-lg text-center space-y-1.5 hover:scale-[1.02] transition-transform">
+                  <div className="w-9 h-9 rounded-xl bg-red-500/20 text-red-900 mx-auto flex items-center justify-center">
+                    <ClipboardList className="w-5 h-5 text-red-800" />
+                  </div>
+                  <div className="text-xs font-black text-slate-950 leading-tight">Track Activities</div>
+                </div>
+
+                <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-lg text-center space-y-1.5 hover:scale-[1.02] transition-transform">
+                  <div className="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-900 mx-auto flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-pink-800" />
+                  </div>
+                  <div className="text-xs font-black text-slate-950 leading-tight">Boost Performance</div>
+                </div>
+
+                <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-2xl border border-white/80 shadow-lg text-center space-y-1.5 hover:scale-[1.02] transition-transform">
+                  <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-900 mx-auto flex items-center justify-center">
+                    <ShieldCheck className="w-5 h-5 text-emerald-800" />
+                  </div>
+                  <div className="text-xs font-black text-slate-950 leading-tight">Better Outcomes</div>
+                </div>
+              </div>
+
+              {/* Realistic Medical Bag & Field Work Visual Banner */}
+              <div className="relative rounded-2xl bg-slate-950/80 backdrop-blur-md text-white p-5 shadow-2xl border border-amber-300/40 hidden sm:flex items-center justify-between overflow-hidden">
+                <div className="space-y-2 z-10 max-w-sm">
+                  <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/30 text-amber-200 border border-amber-400/50 inline-flex items-center gap-1.5 shadow-xs">
+                    <Sparkles className="w-3 h-3 text-amber-300" />
+                    Smart Field Ops
+                  </span>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-black text-white leading-snug">
+                      Building Relationships, Delivering Better Health
+                    </p>
+                    <p className="text-xs text-amber-200/90 font-medium">
+                      Stronger Connections, Healthier Tomorrow
+                    </p>
+                  </div>
+                </div>
+
+                <div className="relative z-10 flex items-center gap-3">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-200 shadow-inner">
+                    <Briefcase className="w-7 h-7 text-amber-300" />
+                  </div>
+                </div>
+
+                {/* Decorative Glow */}
+                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-amber-500/20 rounded-full blur-xl" />
               </div>
             </div>
-
-            {/* Main Headline */}
-            <div className="space-y-2">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-blue-950 leading-tight tracking-tight">
-                Empowering Medical Representatives
-              </h2>
-              <p className="text-lg sm:text-xl font-bold text-blue-700">
-                Driving Healthcare Impact Every Day
-              </p>
-            </div>
-
-            {/* 4 Feature Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-2xl border border-blue-200/80 shadow-xs hover:shadow-md transition-all text-center space-y-1.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 mx-auto flex items-center justify-center">
-                  <Users className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-bold text-blue-950 leading-tight">Plan Visits</div>
-              </div>
-
-              <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-2xl border border-blue-200/80 shadow-xs hover:shadow-md transition-all text-center space-y-1.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 mx-auto flex items-center justify-center">
-                  <ClipboardList className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-bold text-blue-950 leading-tight">Track Activities</div>
-              </div>
-
-              <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-2xl border border-blue-200/80 shadow-xs hover:shadow-md transition-all text-center space-y-1.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 mx-auto flex items-center justify-center">
-                  <TrendingUp className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-bold text-blue-950 leading-tight">Boost Performance</div>
-              </div>
-
-              <div className="bg-white/70 backdrop-blur-md p-3.5 rounded-2xl border border-blue-200/80 shadow-xs hover:shadow-md transition-all text-center space-y-1.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 mx-auto flex items-center justify-center">
-                  <ShieldCheck className="w-5 h-5" />
-                </div>
-                <div className="text-xs font-bold text-blue-950 leading-tight">Better Outcomes</div>
-              </div>
-            </div>
-
-            {/* Realistic Medical Bag & Field Work Visual Banner */}
-            <div className="relative rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-6 shadow-xl border border-blue-900/50 overflow-hidden hidden sm:flex items-center justify-between">
-              <div className="space-y-3 z-10 max-w-sm">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-400/30 inline-flex items-center gap-1.5">
-                  <Sparkles className="w-3 h-3 text-blue-400" />
-                  Smart Field Ops
-                </span>
-                <div className="space-y-1">
-                  <p className="text-sm font-black text-white leading-snug">
-                    Building Relationships, Delivering Better Health
-                  </p>
-                  <p className="text-xs text-blue-200/80">
-                    Stronger Connections, Healthier Tomorrow
-                  </p>
-                </div>
-              </div>
-
-              <div className="relative z-10 flex items-center gap-3">
-                <div className="w-16 h-16 rounded-2xl bg-blue-600/30 border border-blue-400/30 flex items-center justify-center text-blue-300 shadow-inner">
-                  <Briefcase className="w-8 h-8 text-blue-300" />
-                </div>
-              </div>
-
-              {/* Decorative Glow */}
-              <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/20 rounded-full blur-2xl" />
-            </div>
-
           </div>
 
           {/* RIGHT COLUMN: Floating White Login Card */}
