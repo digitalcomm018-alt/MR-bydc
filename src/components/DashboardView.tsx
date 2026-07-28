@@ -185,39 +185,39 @@ export const DashboardView: React.FC = () => {
           <p className="text-[11px] text-sky-900 font-extrabold mt-1.5">100% Target Met</p>
         </FlowingBox>
 
-        {/* Box 3: Theme 3 (Blush Coral Rose) */}
+        {/* Box 3: Image 2 Left Background (Mint Turquoise / Light Teal) */}
         <FlowingBox themeIndex={3}>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-rose-900">POB Orders</span>
-            <div className="w-8 h-8 rounded-xl bg-rose-800 text-rose-50 flex items-center justify-center">
-              <TrendingUp className="w-4 h-4" />
+            <span className="text-xs font-black uppercase tracking-wider text-[#5A0020]">POB Orders</span>
+            <div className="w-8 h-8 rounded-xl bg-[#8A0030] text-white flex items-center justify-center shadow-xs">
+              <TrendingUp className="w-4 h-4 stroke-[2.5]" />
             </div>
           </div>
           <div className="flex items-baseline gap-1">
-            <span className="text-2xl font-black text-rose-950">₹{(totalPobToday + 18300).toLocaleString()}</span>
+            <span className="text-2xl font-black text-[#4A0018]">₹{(totalPobToday + 18300).toLocaleString()}</span>
           </div>
-          <p className="text-[11px] text-rose-900 font-bold mt-3">3 Chemist Orders Booked</p>
+          <p className="text-[11px] text-[#5A0020] font-black mt-3">3 Chemist Orders Booked</p>
         </FlowingBox>
 
-        {/* Box 4: Theme 4 (Golden Wave Sunrise) */}
+        {/* Box 4: Image 2 Right Background (Deep Cyan / Ocean Blue Gradient) */}
         <FlowingBox themeIndex={4}>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-950">Sample Stock</span>
-            <div className="w-8 h-8 rounded-xl bg-amber-900 text-amber-50 flex items-center justify-center">
-              <PackageCheck className="w-4 h-4" />
+            <span className="text-xs font-black uppercase tracking-wider text-cyan-100">Sample Stock</span>
+            <div className="w-8 h-8 rounded-xl bg-[#4A1A00] text-amber-200 border border-amber-500/30 flex items-center justify-center shadow-xs">
+              <PackageCheck className="w-4 h-4 stroke-[2.5]" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-black text-amber-950">293</span>
-            <span className="text-xs text-amber-900 font-semibold">Units</span>
+            <span className="text-2xl font-black text-white">293</span>
+            <span className="text-xs text-amber-200 font-bold">Units</span>
           </div>
           {lowStockSamples.length > 0 ? (
-            <div className="flex items-center gap-1 text-[11px] font-bold text-amber-950 mt-2">
-              <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+            <div className="flex items-center gap-1 text-[11px] font-black text-amber-300 mt-2">
+              <AlertTriangle className="w-3.5 h-3.5 shrink-0 text-amber-400" />
               <span>{lowStockSamples.length} Low Stock Item</span>
             </div>
           ) : (
-            <p className="text-[11px] text-amber-950 font-bold mt-2">Stock Healthy</p>
+            <p className="text-[11px] text-cyan-100 font-black mt-2">Stock Healthy</p>
           )}
         </FlowingBox>
       </div>

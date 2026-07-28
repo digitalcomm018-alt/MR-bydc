@@ -36,23 +36,23 @@ export const FLOWING_THEMES: FlowingTheme[] = [
   },
   {
     id: 3,
-    name: 'Lavender Lilac (Image 7 Palette)',
-    bgClass: 'bg-gradient-to-br from-purple-200 via-indigo-150 to-purple-200 border border-purple-300 text-purple-950',
-    cardBgClass: 'bg-gradient-to-br from-purple-100/95 via-indigo-50/90 to-purple-100/95 text-purple-950 border-purple-300 shadow-sm',
-    textClass: 'text-purple-950',
-    borderClass: 'border-purple-300/80',
-    badgeClass: 'bg-purple-900 text-purple-50 font-bold',
-    accentGlow: 'from-purple-300/40 via-indigo-200/20 to-transparent'
+    name: 'Mint Turquoise (Image 2 Left Background)',
+    bgClass: 'bg-gradient-to-br from-[#5ce1ce] via-[#38d1b4] to-[#22b59b] border-2 border-teal-300 text-slate-950 shadow-md',
+    cardBgClass: 'bg-gradient-to-br from-[#5ce1ce] via-[#38d1b4] to-[#22b59b] text-slate-950 border-teal-300/80 shadow-md',
+    textClass: 'text-slate-950',
+    borderClass: 'border-teal-300',
+    badgeClass: 'bg-[#8A0030] text-white font-black',
+    accentGlow: 'from-teal-100/50 via-emerald-200/30 to-transparent'
   },
   {
     id: 4,
-    name: 'Amber Stage Spotlight (Image 3 Background)',
-    bgClass: 'bg-gradient-to-br from-[#F57C00] via-[#EA580C] to-[#C2410C] border-2 border-amber-400 text-white shadow-2xl relative',
-    cardBgClass: 'bg-gradient-to-br from-amber-500/95 via-orange-600/90 to-amber-700/95 text-white border-amber-400 shadow-md',
+    name: 'Deep Cyan Ocean (Image 2 Right Background)',
+    bgClass: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009bca] via-[#006080] to-[#003850] border-2 border-cyan-400/50 text-white shadow-xl',
+    cardBgClass: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009bca] via-[#006080] to-[#003850] text-white border-cyan-400/50 shadow-xl',
     textClass: 'text-white',
-    borderClass: 'border-amber-400',
-    badgeClass: 'bg-slate-950/80 text-amber-200 border border-amber-400/60 font-black',
-    accentGlow: 'from-yellow-200/50 via-amber-400/30 to-transparent'
+    borderClass: 'border-cyan-400/50',
+    badgeClass: 'bg-[#4A2000] text-amber-200 border border-amber-500/30 font-black',
+    accentGlow: 'from-cyan-300/40 via-blue-400/20 to-transparent'
   },
   {
     id: 5,
