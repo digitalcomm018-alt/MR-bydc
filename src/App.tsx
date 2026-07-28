@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Navbar } from './components/Navbar';
+import { LoggedInUserProfileHeader } from './components/LoggedInUserProfileHeader';
 import { Sidebar } from './components/Sidebar';
 import { MobileNav } from './components/MobileNav';
 import { LoginPage } from './components/LoginPage';
@@ -48,6 +49,7 @@ const AppShell: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-100/70 text-slate-900 flex flex-col font-sans selection:bg-teal-500 selection:text-white">
       <Navbar />
+      <LoggedInUserProfileHeader />
       <div className="flex flex-1">
         <Sidebar />
         <MainContent />

@@ -54,6 +54,7 @@ export const MasterSettingsView: React.FC = () => {
   // User / Team Member Form
   const [userName, setUserName] = useState('');
   const [userEmpId, setUserEmpId] = useState('');
+  const [userPasswordPin, setUserPasswordPin] = useState('123456');
   const [userRole, setUserRole] = useState<UserRole>('MR');
   const [userDesignation, setUserDesignation] = useState('Medical Representative');
   const [userHq, setUserHq] = useState('Metro City Central HQ');
@@ -174,6 +175,7 @@ export const MasterSettingsView: React.FC = () => {
     addUser({
       name: userName,
       employeeId: userEmpId,
+      passwordPin: userPasswordPin || '123456',
       role: userRole,
       designation: userDesignation || (userRole === 'MR' ? 'Medical Representative' : userRole === 'ASM' ? 'Area Sales Manager' : userRole === 'Marketing' ? 'Marketing Specialist' : 'System Admin'),
       hqLocation: userHq || 'Metro City Central HQ',
@@ -477,16 +479,28 @@ export const MasterSettingsView: React.FC = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <div>
                     <label className="block font-bold text-slate-700 mb-1">Employee ID *</label>
                     <input
                       type="text"
                       required
                       value={userEmpId}
-                      onChange={(e) => setUserEmpId(e.target.value.toUpperCase())}
+                      onChange={(e) => setUserEmpId(e.target.value)}
                       placeholder="e.g. MR-9046"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-mono font-bold"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-slate-800 font-mono font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Password *</label>
+                    <input
+                      type="text"
+                      required
+                      value={userPasswordPin}
+                      onChange={(e) => setUserPasswordPin(e.target.value)}
+                      placeholder="e.g. 123456"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-emerald-900 font-mono font-bold"
                     />
                   </div>
 
@@ -502,12 +516,12 @@ export const MasterSettingsView: React.FC = () => {
                         else if (r === 'Marketing') setUserDesignation('Brand & Marketing Manager');
                         else setUserDesignation('Regional Admin Director');
                       }}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 font-bold"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-2 py-2 text-slate-800 font-bold"
                     >
-                      <option value="MR">MR (Medical Representative)</option>
-                      <option value="ASM">ASM (Area Sales Manager)</option>
-                      <option value="Marketing">Marketing Team</option>
-                      <option value="Admin">Admin (System Master)</option>
+                      <option value="MR">MR</option>
+                      <option value="ASM">ASM</option>
+                      <option value="Marketing">Marketing</option>
+                      <option value="Admin">Admin</option>
                     </select>
                   </div>
                 </div>

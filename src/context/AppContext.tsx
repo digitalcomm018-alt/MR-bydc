@@ -132,7 +132,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [selectedBeat, setSelectedBeat] = useState<string>('Central Beat');
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return safeGetLocalStorage<boolean>(`${LOCAL_STORAGE_KEY}_is_auth`, true);
+    return safeGetLocalStorage<boolean>(`${LOCAL_STORAGE_KEY}_is_auth`, false);
   });
 
   const [usersList, setUsersList] = useState<UserProfile[]>(() => {
@@ -193,6 +193,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   });
 
   // Save to LocalStorage
+  useEffect(() => {
+    safeSetLocalStorage(`${LOCAL_STORAGE_KEY}_is_auth`, isAuthenticated);
+  }, [isAuthenticated]);
+
   useEffect(() => {
     safeSetLocalStorage(`${LOCAL_STORAGE_KEY}_user`, currentUser);
   }, [currentUser]);

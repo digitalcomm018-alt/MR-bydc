@@ -24,7 +24,15 @@ import {
   Radio,
   Sparkles,
   Lock,
-  UserCheck
+  UserCheck,
+  Trash2,
+  UserPlus,
+  RefreshCw,
+  Mail,
+  Phone,
+  Briefcase,
+  Building2,
+  X
 } from 'lucide-react';
 
 export const AdminLiveUserMonitor: React.FC = () => {
@@ -33,7 +41,9 @@ export const AdminLiveUserMonitor: React.FC = () => {
     currentUser,
     toggleUserLiveSessionStatus,
     updateUser,
-    updateUserLoginPosition
+    updateUserLoginPosition,
+    deleteUser,
+    addUser
   } = useApp();
 
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'ONLINE' | 'OFFLINE'>('ALL');
@@ -43,9 +53,32 @@ export const AdminLiveUserMonitor: React.FC = () => {
 
   // Edit Credentials Modal State
   const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
+  const [editName, setEditName] = useState<string>('');
   const [editEmpId, setEditEmpId] = useState<string>('');
   const [editPin, setEditPin] = useState<string>('');
   const [editRole, setEditRole] = useState<UserRole>('MR');
+  const [editDesignation, setEditDesignation] = useState<string>('');
+  const [editHq, setEditHq] = useState<string>('');
+  const [editTerritory, setEditTerritory] = useState<string>('');
+  const [editEmail, setEditEmail] = useState<string>('');
+  const [editPhone, setEditPhone] = useState<string>('');
+  const [editManager, setEditManager] = useState<string>('');
+
+  // Confirm Delete State
+  const [userToDelete, setUserToDelete] = useState<UserProfile | null>(null);
+
+  // Provision New User Modal
+  const [showAddUserModal, setShowAddUserModal] = useState<boolean>(false);
+  const [newName, setNewName] = useState<string>('');
+  const [newEmpId, setNewEmpId] = useState<string>('');
+  const [newPin, setNewPin] = useState<string>('123456');
+  const [newRole, setNewRole] = useState<UserRole>('MR');
+  const [newDesignation, setNewDesignation] = useState<string>('Medical Representative');
+  const [newHq, setNewHq] = useState<string>('Metro Central HQ');
+  const [newTerritory, setNewTerritory] = useState<string>('Central Beat Zone');
+  const [newEmail, setNewEmail] = useState<string>('');
+  const [newPhone, setNewPhone] = useState<string>('');
+
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -82,9 +115,16 @@ export const AdminLiveUserMonitor: React.FC = () => {
 
   const handleOpenEditModal = (u: UserProfile) => {
     setEditingUser(u);
+    setEditName(u.name);
     setEditEmpId(u.employeeId);
-    setEditPin(u.passwordPin || '1234');
+    setEditPin(u.passwordPin || '123456');
     setEditRole(u.role);
+    setEditDesignation(u.designation || '');
+    setEditHq(u.hqLocation || '');
+    setEditTerritory(u.territory || '');
+    setEditEmail(u.email || '');
+    setEditPhone(u.phone || '');
+    setEditManager(u.managerName || '');
   };
 
   const handleSaveCredentials = (e: React.FormEvent) => {
@@ -93,14 +133,78 @@ export const AdminLiveUserMonitor: React.FC = () => {
 
     const updated: UserProfile = {
       ...editingUser,
-      employeeId: editEmpId.trim().toUpperCase(),
+      name: editName.trim(),
+      employeeId: editEmpId.trim(),
       passwordPin: editPin.trim(),
-      role: editRole
+      role: editRole,
+      designation: editDesignation.trim() || editingUser.designation,
+      hqLocation: editHq.trim() || editingUser.hqLocation,
+      territory: editTerritory.trim() || editingUser.territory,
+      email: editEmail.trim() || editingUser.email,
+      phone: editPhone.trim() || editingUser.phone,
+      managerName: editManager.trim() || editingUser.managerName
     };
 
     updateUser(updated);
     setEditingUser(null);
-    showToast(`Credentials updated for ${updated.name} (${updated.employeeId})`);
+    showToast(`Admin Credentials & Profile updated for ${updated.name} (${updated.employeeId})`);
+  };
+
+  const handleConfirmDelete = () => {
+    if (!userToDelete) return;
+    deleteUser(userToDelete.id);
+    showToast(`Deleted account: ${userToDelete.name} (${userToDelete.employeeId})`);
+    setUserToDelete(null);
+    if (editingUser?.id === userToDelete.id) {
+      setEditingUser(null);
+    }
+  };
+
+  const handleResetPasswordDefault = (u: UserProfile) => {
+    const updated: UserProfile = {
+      ...u,
+      passwordPin: '123456'
+    };
+    updateUser(updated);
+    if (editingUser?.id === u.id) {
+      setEditPin('123456');
+    }
+    showToast(`Password reset to "123456" for ${u.name}`);
+  };
+
+  const handleProvisionNewUser = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newName || !newEmpId) return;
+
+    addUser({
+      name: newName.trim(),
+      employeeId: newEmpId.trim(),
+      passwordPin: newPin.trim() || '123456',
+      role: newRole,
+      designation: newDesignation.trim() || (newRole === 'MR' ? 'Medical Representative' : newRole === 'ASM' ? 'Area Sales Manager' : 'Admin Director'),
+      hqLocation: newHq.trim() || 'Metro Central HQ',
+      territory: newTerritory.trim() || 'Central Beat Zone',
+      managerName: 'Board of Directors',
+      email: newEmail.trim() || `${newEmpId.toLowerCase()}@pharmapulse.com`,
+      phone: newPhone.trim() || '+91 99000 00000',
+      status: 'Active',
+      isLoggedIn: true,
+      lastLoginTimestamp: 'Just Now',
+      loginPosition: {
+        lat: 19.0760,
+        lng: 72.8777,
+        address: `${newTerritory.trim() || 'Central Beat Zone'}, HQ Office`,
+        beat: 'Central Beat',
+        device: 'Admin Provisioned Device',
+        ip: '103.22.14.88'
+      }
+    });
+
+    setNewName('');
+    setNewEmpId('');
+    setNewPin('123456');
+    setShowAddUserModal(false);
+    showToast(`Successfully created user: ${newName} (${newEmpId}) with Password: ${newPin || '123456'}`);
   };
 
   const handleSimulateGPSPing = (u: UserProfile) => {
@@ -131,124 +235,137 @@ export const AdminLiveUserMonitor: React.FC = () => {
         </div>
       )}
 
-      {/* Header Banner */}
+      {/* ADMIN CONTROL CENTER HEADER */}
       <FlowingHeader
-        themeIndex={7}
-        title="Admin Live Accounts & Logged-In Position Command Center"
-        subtitle="Real-time multi-user session tracking, GPS field position monitoring, and credential management"
+        themeIndex={8}
+        badgeText="ADMIN LIVE GPS & CREDENTIAL CONTROL"
+        title="Admin User Sessions & Position Monitor"
+        subtitle="Manage user credentials, edit or delete accounts, assign login IDs & passwords, and track real-time logged-in positions of all field reps."
         icon={Radio}
-        badgeText="Live Operations Command"
+        actions={
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowAddUserModal(true)}
+              className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md flex items-center gap-1.5 transition-all cursor-pointer"
+            >
+              <UserPlus className="w-4 h-4" />
+              <span>Assign / Provision New User</span>
+            </button>
+          </div>
+        }
       />
 
-      {/* KPI Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <FlowingBox themeIndex={7} className="p-4">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Total Accounts</span>
-            <Users className="w-4 h-4 text-slate-700" />
+      {/* 4 STATS METRICS BARS */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div className="flex items-center justify-between text-slate-500 text-[10px] font-extrabold uppercase">
+            <span>Total Accounts</span>
+            <Users className="w-4 h-4 text-emerald-700" />
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-950">{totalUsers}</span>
-            <span className="text-[10px] font-bold text-slate-600">Configured by Admin</span>
-          </div>
-        </FlowingBox>
+          <div className="text-2xl font-black text-slate-950 mt-1">{totalUsers}</div>
+          <p className="text-[10px] text-slate-500 font-medium mt-0.5">Configured Users in System</p>
+        </div>
 
-        <FlowingBox themeIndex={7} className="p-4 border-emerald-300 bg-emerald-50/60">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-emerald-900 uppercase tracking-wider">Online Now</span>
-            <Wifi className="w-4 h-4 text-emerald-600 animate-pulse" />
+        <div className="bg-white p-4 rounded-2xl border border-emerald-200/80 shadow-2xs">
+          <div className="flex items-center justify-between text-emerald-800 text-[10px] font-extrabold uppercase">
+            <span>Online (Logged In)</span>
+            <Wifi className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-emerald-950">{onlineCount}</span>
-            <span className="text-[10px] font-extrabold text-emerald-800">Active Live Sessions</span>
-          </div>
-        </FlowingBox>
+          <div className="text-2xl font-black text-emerald-900 mt-1">{onlineCount}</div>
+          <p className="text-[10px] text-emerald-700 font-medium mt-0.5">Active Live Portal Sessions</p>
+        </div>
 
-        <FlowingBox themeIndex={7} className="p-4 border-teal-300 bg-teal-50/60">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-teal-900 uppercase tracking-wider">Active Field MRs</span>
-            <Navigation className="w-4 h-4 text-teal-600" />
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
+          <div className="flex items-center justify-between text-slate-500 text-[10px] font-extrabold uppercase">
+            <span>Offline (Logged Out)</span>
+            <WifiOff className="w-4 h-4 text-slate-400" />
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-teal-950">{activeFieldMRs}</span>
-            <span className="text-[10px] font-extrabold text-teal-800">Punched In Beat Duty</span>
-          </div>
-        </FlowingBox>
+          <div className="text-2xl font-black text-slate-700 mt-1">{offlineCount}</div>
+          <p className="text-[10px] text-slate-500 font-medium mt-0.5">Inactive / Out of Field</p>
+        </div>
 
-        <FlowingBox themeIndex={7} className="p-4 border-slate-300 bg-slate-50">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Offline Accounts</span>
-            <WifiOff className="w-4 h-4 text-slate-500" />
+        <div className="bg-white p-4 rounded-2xl border border-blue-200/80 shadow-2xs">
+          <div className="flex items-center justify-between text-blue-800 text-[10px] font-extrabold uppercase">
+            <span>Active Field MRs</span>
+            <Smartphone className="w-4 h-4 text-blue-600" />
           </div>
-          <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-black text-slate-700">{offlineCount}</span>
-            <span className="text-[10px] font-bold text-slate-500">Not Logged In</span>
-          </div>
-        </FlowingBox>
+          <div className="text-2xl font-black text-blue-900 mt-1">{activeFieldMRs}</div>
+          <p className="text-[10px] text-blue-700 font-medium mt-0.5">MRs Punched In & Visiting</p>
+        </div>
       </div>
 
-      {/* Control Bar: Search & Status Filters */}
-      <FlowingBox themeIndex={7} className="p-4 space-y-3">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-          {/* Search Input */}
-          <div className="relative w-full md:w-80">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search user name, ID, address, territory..."
-              className="w-full bg-white border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 placeholder-slate-400 font-bold focus:outline-hidden focus:border-emerald-600"
-            />
-          </div>
-
-          {/* Filter Pills */}
-          <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-            {/* Status Pills */}
-            <div className="flex items-center bg-slate-200/80 p-1 rounded-xl gap-1">
-              {(['ALL', 'ONLINE', 'OFFLINE'] as const).map((st) => (
-                <button
-                  key={st}
-                  onClick={() => setStatusFilter(st)}
-                  className={`px-3 py-1 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
-                    statusFilter === st
-                      ? 'bg-slate-950 text-emerald-400 shadow-2xs'
-                      : 'text-slate-700 hover:text-slate-950'
-                  }`}
-                >
-                  {st === 'ALL' ? 'All Live' : st === 'ONLINE' ? '🟢 Online' : '🔴 Offline'}
-                </button>
-              ))}
-            </div>
-
-            {/* Role Filter */}
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="bg-white text-slate-900 border border-slate-300 font-extrabold text-xs rounded-xl px-3 py-1.5 focus:outline-hidden"
+      {/* FILTER & CONTROL BAR */}
+      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          {/* Status Tabs */}
+          <div className="flex bg-slate-100 p-1 rounded-xl text-xs font-bold">
+            <button
+              onClick={() => setStatusFilter('ALL')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                statusFilter === 'ALL' ? 'bg-white text-slate-950 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
             >
-              <option value="ALL">All User Roles</option>
-              <option value="MR">MR (Medical Reps)</option>
-              <option value="ASM">ASM (Area Managers)</option>
-              <option value="Marketing">Marketing Managers</option>
-              <option value="Admin">Admin / Directors</option>
-            </select>
+              All Users ({totalUsers})
+            </button>
+            <button
+              onClick={() => setStatusFilter('ONLINE')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
+                statusFilter === 'ONLINE' ? 'bg-emerald-600 text-white shadow-2xs' : 'text-emerald-700 hover:text-emerald-900'
+              }`}
+            >
+              <Wifi className="w-3 h-3" />
+              Online ({onlineCount})
+            </button>
+            <button
+              onClick={() => setStatusFilter('OFFLINE')}
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1 ${
+                statusFilter === 'OFFLINE' ? 'bg-slate-800 text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              <WifiOff className="w-3 h-3" />
+              Offline ({offlineCount})
+            </button>
           </div>
-        </div>
-      </FlowingBox>
 
-      {/* Main Accounts Grid with Live Logged-In Position */}
-      <div className="grid lg:grid-cols-12 gap-6">
+          {/* Role Filter */}
+          <select
+            value={roleFilter}
+            onChange={(e) => setRoleFilter(e.target.value)}
+            className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-hidden"
+          >
+            <option value="ALL">All Roles</option>
+            <option value="MR">MR Only</option>
+            <option value="ASM">ASM Only</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Admin">Admin</option>
+          </select>
+        </div>
+
+        {/* Search Input */}
+        <div className="relative w-full md:w-72">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search Name, ID, Location..."
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs font-semibold text-slate-800 focus:outline-hidden focus:border-emerald-600"
+          />
+        </div>
+      </div>
+
+      {/* MAIN MONITOR LIST & AUDIT SIDEBAR */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        {/* Left: Live Accounts Monitor List */}
-        <div className="lg:col-span-8 space-y-4">
-          <div className="flex items-center justify-between px-1">
-            <h3 className="text-sm font-black text-slate-900 uppercase tracking-wider flex items-center gap-2">
-              <Activity className="w-4 h-4 text-emerald-700" />
-              <span>User Accounts Live Position Roster ({filteredUsers.length})</span>
+        {/* Left 2 Cols: Live User Cards & Position Details */}
+        <div className="lg:col-span-2 space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-black text-sm text-slate-950 flex items-center gap-2">
+              <Activity className="w-4 h-4 text-emerald-600" />
+              <span>Configured User Credentials & Live Logged-in Positions</span>
             </h3>
             <span className="text-xs text-slate-600 font-semibold">
-              Live updates active • Admin control enabled
+              Admin control enabled • Real-time GPS ping
             </span>
           </div>
 
@@ -279,7 +396,6 @@ export const AdminLiveUserMonitor: React.FC = () => {
                           : 'bg-emerald-400'
                       }`}>
                         {u.name.split(' ').map((n) => n[0]).join('')}
-                        {/* Live Online Badge Dot */}
                         <span className={`absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full ring-2 ring-white ${
                           isOnline ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'
                         }`} />
@@ -289,7 +405,10 @@ export const AdminLiveUserMonitor: React.FC = () => {
                         <div className="flex items-center gap-2 flex-wrap">
                           <h4 className="font-black text-sm text-slate-950 truncate">{u.name}</h4>
                           <span className="font-mono text-xs font-bold text-emerald-900 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
-                            {u.employeeId}
+                            ID: {u.employeeId}
+                          </span>
+                          <span className="font-mono text-xs font-bold text-blue-900 bg-blue-100 px-2 py-0.5 rounded border border-blue-300">
+                            Pass: {u.passwordPin || '123456'}
                           </span>
                           <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase ${
                             u.role === 'ASM'
@@ -309,7 +428,7 @@ export const AdminLiveUserMonitor: React.FC = () => {
                       </div>
                     </div>
 
-                    {/* Online Status Tag & Remote Session Switcher */}
+                    {/* Online Status Tag & Session Controls */}
                     <div className="flex items-center gap-2 self-end sm:self-center">
                       <div className={`px-3 py-1 rounded-xl text-xs font-black flex items-center gap-1.5 ${
                         isOnline
@@ -319,12 +438,12 @@ export const AdminLiveUserMonitor: React.FC = () => {
                         {isOnline ? (
                           <>
                             <Wifi className="w-3.5 h-3.5 text-emerald-600" />
-                            <span>Logged In (Online)</span>
+                            <span>Logged In</span>
                           </>
                         ) : (
                           <>
                             <WifiOff className="w-3.5 h-3.5 text-slate-500" />
-                            <span>Logged Out (Offline)</span>
+                            <span>Logged Out</span>
                           </>
                         )}
                       </div>
@@ -376,8 +495,8 @@ export const AdminLiveUserMonitor: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Admin Quick Actions */}
-                  <div className="mt-2 flex items-center justify-between text-xs pt-1">
+                  {/* ADMIN ACTION BUTTONS: EDIT CREDENTIALS, RESET PASSWORD, DELETE USER */}
+                  <div className="mt-2.5 pt-2 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2 text-xs">
                     <button
                       onClick={() => handleSimulateGPSPing(u)}
                       className="text-emerald-800 hover:text-emerald-950 font-black flex items-center gap-1 cursor-pointer hover:underline"
@@ -386,117 +505,79 @@ export const AdminLiveUserMonitor: React.FC = () => {
                       <span>Ping Live GPS Sensor</span>
                     </button>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 flex-wrap">
                       <button
                         onClick={() => handleOpenEditModal(u)}
-                        className="text-slate-700 hover:text-slate-950 font-bold flex items-center gap-1 cursor-pointer hover:underline"
+                        className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 border border-blue-200 hover:bg-blue-100 font-extrabold flex items-center gap-1 cursor-pointer transition-all"
                       >
-                        <KeyRound className="w-3.5 h-3.5 text-slate-600" />
-                        <span>Edit Credentials (PIN: {u.passwordPin || '1234'})</span>
+                        <KeyRound className="w-3.5 h-3.5 text-blue-700" />
+                        <span>Edit Credentials / Password</span>
                       </button>
+
+                      <button
+                        onClick={() => handleResetPasswordDefault(u)}
+                        className="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 font-extrabold flex items-center gap-1 cursor-pointer transition-all"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-amber-700" />
+                        <span>Reset Password (123456)</span>
+                      </button>
+
+                      {usersList.length > 1 && currentUser.id !== u.id && (
+                        <button
+                          onClick={() => setUserToDelete(u)}
+                          className="px-2 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 font-extrabold flex items-center gap-1 cursor-pointer transition-all"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                          <span>Delete Account</span>
+                        </button>
+                      )}
 
                       <button
                         onClick={() => setSelectedUserForDetail(isSelected ? null : u)}
                         className="text-teal-800 hover:text-teal-950 font-extrabold flex items-center gap-1 cursor-pointer hover:underline"
                       >
-                        <Sparkles className="w-3.5 h-3.5 text-teal-700" />
-                        <span>{isSelected ? 'Hide Details' : 'View Full Profile'}</span>
+                        <Globe className="w-3.5 h-3.5 text-teal-700" />
+                        <span>{isSelected ? 'Close Details' : 'Full Audit'}</span>
                       </button>
                     </div>
                   </div>
-
                 </FlowingBox>
               );
             })}
           </div>
         </div>
 
-        {/* Right: Live Field Map Visualizer & Detail Panel */}
-        <div className="lg:col-span-4 space-y-4">
-          
-          {/* Live Position Radar Card */}
-          <FlowingBox themeIndex={7} className="p-5 space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-              <h3 className="text-sm font-black text-slate-950 uppercase tracking-wider flex items-center gap-2">
-                <Globe className="w-4 h-4 text-emerald-700" />
-                <span>Live Territory GPS Radar</span>
-              </h3>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-100 text-emerald-900">
-                Geofence Active
-              </span>
-            </div>
+        {/* Right 1 Col: Selected User Audit Details */}
+        <div className="space-y-4">
+          <h3 className="font-black text-sm text-slate-950 flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <span>Admin Live Account Inspector</span>
+          </h3>
 
-            {/* Mock Map Canvas */}
-            <div className="w-full h-56 bg-slate-900 rounded-2xl relative overflow-hidden flex flex-col justify-between p-4 border border-slate-800">
-              {/* Radar Circles */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
-                <div className="w-48 h-48 rounded-full border border-emerald-400 animate-ping" />
-                <div className="w-32 h-32 rounded-full border border-teal-400 absolute" />
-                <div className="w-16 h-16 rounded-full border border-cyan-400 absolute" />
-              </div>
-
-              <div className="relative z-10 flex items-center justify-between text-xs text-slate-300 font-mono font-bold">
-                <span className="flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  LIVE POSITION FEED
-                </span>
-                <span>METRO ZONE</span>
-              </div>
-
-              {/* Pins for online users */}
-              <div className="relative z-10 my-auto grid grid-cols-2 gap-2">
-                {usersList.slice(0, 4).map((usr) => (
-                  <div key={usr.id} className="bg-slate-950/80 p-2 rounded-xl border border-slate-800 text-[10px] text-white">
-                    <div className="font-extrabold text-emerald-400 truncate">{usr.name}</div>
-                    <div className="text-slate-400 text-[9px] truncate">{usr.loginPosition?.beat || usr.territory}</div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="relative z-10 text-[10px] text-slate-400 font-medium flex items-center justify-between pt-2 border-t border-slate-800">
-                <span>GPS Accuracy: ± 5 meters</span>
-                <span className="text-emerald-400 font-bold">100% Geofenced</span>
-              </div>
-            </div>
-
-            <div className="text-xs text-slate-600 leading-relaxed font-semibold bg-slate-100 p-3 rounded-xl border border-slate-200">
-              <span className="font-bold text-slate-950 block mb-0.5">Admin Security Protocol</span>
-              All logged-in positions are continuously cross-referenced with assigned beat plans and Doctor DCR check-ins.
-            </div>
-          </FlowingBox>
-
-          {/* User Detail Inspection */}
           {selectedUserForDetail ? (
-            <FlowingBox themeIndex={7} className="p-5 space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                <h4 className="font-black text-sm text-slate-950">Account Audit Detail</h4>
-                <button
-                  onClick={() => setSelectedUserForDetail(null)}
-                  className="text-xs text-slate-500 hover:text-slate-900 font-bold cursor-pointer"
-                >
-                  Close
-                </button>
+            <FlowingBox themeIndex={6} className="p-5 space-y-4 sticky top-20">
+              <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-400 font-black text-slate-950 flex items-center justify-center text-sm shadow-md">
+                  {selectedUserForDetail.name.split(' ').map((n) => n[0]).join('')}
+                </div>
+                <div>
+                  <h4 className="font-black text-sm text-slate-950">{selectedUserForDetail.name}</h4>
+                  <p className="text-xs text-slate-600 font-bold">{selectedUserForDetail.designation}</p>
+                  <span className="font-mono text-xs font-black text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded inline-block mt-1">
+                    ID: {selectedUserForDetail.employeeId} | Pass: {selectedUserForDetail.passwordPin || '123456'}
+                  </span>
+                </div>
               </div>
 
               <div className="space-y-2 text-xs">
                 <div>
-                  <span className="text-slate-500 font-semibold block">Full Name & ID</span>
-                  <p className="font-black text-slate-950">{selectedUserForDetail.name} ({selectedUserForDetail.employeeId})</p>
+                  <span className="text-slate-500 font-semibold block">Role & Territory</span>
+                  <p className="font-bold text-slate-900">{selectedUserForDetail.role} • {selectedUserForDetail.territory}</p>
                 </div>
 
                 <div>
-                  <span className="text-slate-500 font-semibold block">Designation</span>
-                  <p className="font-bold text-slate-800">{selectedUserForDetail.designation}</p>
-                </div>
-
-                <div>
-                  <span className="text-slate-500 font-semibold block">HQ Location & Territory</span>
-                  <p className="font-bold text-slate-800">{selectedUserForDetail.hqLocation} • {selectedUserForDetail.territory}</p>
-                </div>
-
-                <div>
-                  <span className="text-slate-500 font-semibold block">Reporting Manager</span>
-                  <p className="font-bold text-slate-800">{selectedUserForDetail.managerName}</p>
+                  <span className="text-slate-500 font-semibold block">Headquarters & Manager</span>
+                  <p className="font-bold text-slate-900">{selectedUserForDetail.hqLocation} (Reporting: {selectedUserForDetail.managerName})</p>
                 </div>
 
                 <div>
@@ -505,16 +586,29 @@ export const AdminLiveUserMonitor: React.FC = () => {
                 </div>
 
                 <div>
-                  <span className="text-slate-500 font-semibold block">Login Security PIN</span>
-                  <p className="font-mono font-black text-emerald-800 bg-emerald-100 inline-block px-2 py-0.5 rounded border border-emerald-300">
-                    {selectedUserForDetail.passwordPin || '1234'}
+                  <span className="text-slate-500 font-semibold block">Logged In Position</span>
+                  <p className="font-extrabold text-emerald-950 bg-emerald-50 p-2 rounded-xl border border-emerald-200 mt-0.5">
+                    {selectedUserForDetail.loginPosition?.address || 'Verified Territory Beat'}
                   </p>
                 </div>
               </div>
+
+              <div className="pt-2 border-t border-slate-200 flex items-center gap-2">
+                <button
+                  onClick={() => handleOpenEditModal(selectedUserForDetail)}
+                  className="w-full py-2 bg-blue-600 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer shadow-xs"
+                >
+                  <KeyRound className="w-3.5 h-3.5" />
+                  <span>Edit Credentials</span>
+                </button>
+              </div>
             </FlowingBox>
           ) : (
-            <div className="bg-slate-100 p-4 rounded-2xl border border-slate-200 text-xs text-slate-600 text-center font-medium">
-              Click "View Full Profile" on any user card to inspect complete account audit info.
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 text-xs text-slate-600 text-center font-medium space-y-2">
+              <p className="font-bold text-slate-800">Select any user card to view live audit info.</p>
+              <p className="text-[11px] text-slate-500">
+                ADMIN can edit login credentials, change passwords, and track real-time GPS locations for all users.
+              </p>
             </div>
           )}
 
@@ -522,85 +616,301 @@ export const AdminLiveUserMonitor: React.FC = () => {
 
       </div>
 
-      {/* EDIT CREDENTIALS MODAL */}
+      {/* EDIT CREDENTIALS & PROFILE MODAL */}
       {editingUser && (
         <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white max-w-md w-full rounded-2xl p-6 shadow-2xl border border-slate-300 space-y-4">
+          <div className="bg-white max-w-lg w-full rounded-3xl p-6 shadow-2xl border border-slate-300 space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
                 <KeyRound className="w-5 h-5 text-emerald-700" />
                 <h3 className="font-black text-base text-slate-950">
-                  Update Admin Login Credentials
+                  Edit Credentials & Account Settings
                 </h3>
               </div>
               <button
                 onClick={() => setEditingUser(null)}
-                className="text-slate-400 hover:text-slate-700 font-bold text-xs cursor-pointer"
+                className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 cursor-pointer"
               >
-                ✕
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveCredentials} className="space-y-4">
+            <form onSubmit={handleSaveCredentials} className="space-y-3 text-xs">
               <div>
-                <label className="block text-xs font-black uppercase text-slate-700 mb-1">
-                  User Account Name
-                </label>
-                <input
-                  type="text"
-                  disabled
-                  value={editingUser.name}
-                  className="w-full bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-800"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-black uppercase text-slate-700 mb-1">
-                  Employee ID (Login Credential)
+                <label className="block font-black text-slate-700 mb-1">
+                  User Full Name *
                 </label>
                 <input
                   type="text"
                   required
-                  value={editEmpId}
-                  onChange={(e) => setEditEmpId(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-black text-slate-950 focus:outline-hidden focus:border-emerald-600"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:bg-white focus:border-blue-600"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-black uppercase text-slate-700 mb-1">
-                  Security PIN / Password
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={editPin}
-                  onChange={(e) => setEditPin(e.target.value)}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-black text-slate-950 focus:outline-hidden focus:border-emerald-600"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Employee / MR ID (Login ID) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editEmpId}
+                    onChange={(e) => setEditEmpId(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-black text-blue-900 focus:bg-white focus:border-blue-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Password / PIN *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editPin}
+                    onChange={(e) => setEditPin(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-black text-emerald-900 focus:bg-white focus:border-emerald-600"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-black uppercase text-slate-700 mb-1">
-                  Assigned User Role
-                </label>
-                <select
-                  value={editRole}
-                  onChange={(e) => setEditRole(e.target.value as UserRole)}
-                  className="w-full bg-white border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-950 focus:outline-hidden"
-                >
-                  <option value="MR">MR - Medical Representative</option>
-                  <option value="ASM">ASM - Area Sales Manager</option>
-                  <option value="Marketing">Marketing Manager</option>
-                  <option value="Admin">Admin / Regional Director</option>
-                </select>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Assigned Role
+                  </label>
+                  <select
+                    value={editRole}
+                    onChange={(e) => setEditRole(e.target.value as UserRole)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:bg-white"
+                  >
+                    <option value="MR">MR - Medical Representative</option>
+                    <option value="ASM">ASM - Area Sales Manager</option>
+                    <option value="Marketing">Marketing Specialist</option>
+                    <option value="Admin">Admin - System Director</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Official Designation
+                  </label>
+                  <input
+                    type="text"
+                    value={editDesignation}
+                    onChange={(e) => setEditDesignation(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-2">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Headquarters Location
+                  </label>
+                  <input
+                    type="text"
+                    value={editHq}
+                    onChange={(e) => setEditHq(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Assigned Territory
+                  </label>
+                  <input
+                    type="text"
+                    value={editTerritory}
+                    onChange={(e) => setEditTerritory(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={editEmail}
+                    onChange={(e) => setEditEmail(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Phone Number
+                  </label>
+                  <input
+                    type="text"
+                    value={editPhone}
+                    onChange={(e) => setEditPhone(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setEditingUser(null)}
-                  className="flex-1 py-2.5 rounded-xl border border-slate-300 font-extrabold text-xs text-slate-700 hover:bg-slate-100 cursor-pointer"
+                  className="flex-1 py-2.5 rounded-xl border border-slate-300 font-bold text-xs text-slate-700 hover:bg-slate-100 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 font-black text-xs text-white shadow-md cursor-pointer"
+                >
+                  Save Account Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* PROVISION NEW USER MODAL */}
+      {showAddUserModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white max-w-lg w-full rounded-3xl p-6 shadow-2xl border border-slate-300 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-emerald-700" />
+                <h3 className="font-black text-base text-slate-950">
+                  Assign & Provision New User Account
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowAddUserModal(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:text-slate-800 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleProvisionNewUser} className="space-y-3 text-xs">
+              <div>
+                <label className="block font-black text-slate-700 mb-1">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="e.g. Ramesh Kumar"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900 focus:bg-white"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Assign Login Employee ID *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newEmpId}
+                    onChange={(e) => setNewEmpId(e.target.value.toUpperCase())}
+                    placeholder="e.g. MR-5001 or admin2"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-900 focus:bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Assign Password / PIN *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newPin}
+                    onChange={(e) => setNewPin(e.target.value)}
+                    placeholder="e.g. 123456"
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-emerald-900 focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Role *
+                  </label>
+                  <select
+                    value={newRole}
+                    onChange={(e) => {
+                      const r = e.target.value as UserRole;
+                      setNewRole(r);
+                      if (r === 'MR') setNewDesignation('Medical Representative');
+                      else if (r === 'ASM') setNewDesignation('Area Sales Manager');
+                      else if (r === 'Marketing') setNewDesignation('Marketing Manager');
+                      else setNewDesignation('System Admin Director');
+                    }}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-900"
+                  >
+                    <option value="MR">MR - Medical Representative</option>
+                    <option value="ASM">ASM - Area Sales Manager</option>
+                    <option value="Marketing">Marketing Specialist</option>
+                    <option value="Admin">Admin Director</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Official Designation
+                  </label>
+                  <input
+                    type="text"
+                    value={newDesignation}
+                    onChange={(e) => setNewDesignation(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    HQ Location
+                  </label>
+                  <input
+                    type="text"
+                    value={newHq}
+                    onChange={(e) => setNewHq(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-black text-slate-700 mb-1">
+                    Assigned Territory
+                  </label>
+                  <input
+                    type="text"
+                    value={newTerritory}
+                    onChange={(e) => setNewTerritory(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setShowAddUserModal(false)}
+                  className="flex-1 py-2.5 rounded-xl border border-slate-300 font-bold text-xs text-slate-700 hover:bg-slate-100 cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -608,10 +918,46 @@ export const AdminLiveUserMonitor: React.FC = () => {
                   type="submit"
                   className="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 font-black text-xs text-white shadow-md cursor-pointer"
                 >
-                  Save Credentials
+                  Create User Account
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* CONFIRM DELETE MODAL */}
+      {userToDelete && (
+        <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl border border-slate-300 space-y-4">
+            <div className="flex items-center gap-3 text-rose-600">
+              <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                <AlertCircle className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-black text-base text-slate-950">Confirm Deletion</h3>
+                <p className="text-xs text-slate-500">This action cannot be undone.</p>
+              </div>
+            </div>
+
+            <p className="text-xs text-slate-700 font-medium">
+              Are you sure you want to permanently delete user account <strong className="text-slate-950">{userToDelete.name}</strong> ({userToDelete.employeeId})?
+            </p>
+
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                onClick={() => setUserToDelete(null)}
+                className="flex-1 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="flex-1 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-xs font-black text-white shadow-md cursor-pointer"
+              >
+                Yes, Delete
+              </button>
+            </div>
           </div>
         </div>
       )}
