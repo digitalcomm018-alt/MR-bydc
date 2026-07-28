@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { UserProfile } from '../types';
+import { Footer } from './Footer';
 import {
   Shield,
   User,
@@ -387,17 +388,8 @@ export const LoginPage: React.FC = () => {
         </div>
       </div>
 
-      {/* BOTTOM NAVY FOOTER */}
-      <footer className="relative z-10 w-full bg-[#0B1E48] text-white py-4 px-6 text-center shadow-lg border-t border-blue-900/40">
-        <div className="max-w-7xl mx-auto space-y-1">
-          <p className="text-xs sm:text-sm font-extrabold tracking-wide text-blue-100">
-            developed by digital communique Private Limited
-          </p>
-          <p className="text-[11px] font-semibold text-blue-300/80 tracking-wider">
-            Smart Solutions for a Healthier Tomorrow
-          </p>
-        </div>
-      </footer>
+      {/* BOTTOM EMERALD GREEN FOOTER (IMAGE 1 BACKGROUND) */}
+      <Footer />
 
       {/* ROSTER SELECTION MODAL (COMPANY ACCOUNTS) */}
       {showRosterModal && (

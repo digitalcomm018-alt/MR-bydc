@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { LoggedInUserProfileHeader } from './components/LoggedInUserProfileHeader';
 import { Sidebar } from './components/Sidebar';
 import { MobileNav } from './components/MobileNav';
+import { Footer } from './components/Footer';
 import { LoginPage } from './components/LoginPage';
 import { DashboardView } from './components/DashboardView';
 import { DCRView } from './components/DCRView';
@@ -54,6 +55,7 @@ const AppShell: React.FC = () => {
         <Sidebar />
         <MainContent />
       </div>
+      <Footer />
       <MobileNav />
     </div>
   );

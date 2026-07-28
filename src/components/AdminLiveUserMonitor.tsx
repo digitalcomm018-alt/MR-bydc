@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { FlowingHeader, FlowingBox } from '../utils/flowingThemes';
 import { UserProfile, UserRole } from '../types';
+import { AdminOperationalGuide } from './AdminOperationalGuide';
 import {
   Users,
   Wifi,
@@ -32,6 +33,7 @@ import {
   Phone,
   Briefcase,
   Building2,
+  BookOpen,
   X
 } from 'lucide-react';
 
@@ -46,6 +48,7 @@ export const AdminLiveUserMonitor: React.FC = () => {
     addUser
   } = useApp();
 
+  const [viewMode, setViewMode] = useState<'LIVE_SESSIONS' | 'OPERATIONAL_GUIDE'>('LIVE_SESSIONS');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'ONLINE' | 'OFFLINE'>('ALL');
   const [roleFilter, setRoleFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -243,7 +246,32 @@ export const AdminLiveUserMonitor: React.FC = () => {
         subtitle="Manage user credentials, edit or delete accounts, assign login IDs & passwords, and track real-time logged-in positions of all field reps."
         icon={Radio}
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex bg-slate-900/60 p-1 rounded-xl border border-white/20 text-xs font-bold">
+              <button
+                onClick={() => setViewMode('LIVE_SESSIONS')}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === 'LIVE_SESSIONS'
+                    ? 'bg-emerald-500 text-slate-950 font-black shadow-md'
+                    : 'text-slate-200 hover:text-white'
+                }`}
+              >
+                <Radio className="w-3.5 h-3.5" />
+                <span>Live GPS Monitor</span>
+              </button>
+              <button
+                onClick={() => setViewMode('OPERATIONAL_GUIDE')}
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === 'OPERATIONAL_GUIDE'
+                    ? 'bg-blue-500 text-white font-black shadow-md'
+                    : 'text-slate-200 hover:text-white'
+                }`}
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Operational User Guide</span>
+              </button>
+            </div>
+
             <button
               onClick={() => setShowAddUserModal(true)}
               className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs shadow-md flex items-center gap-1.5 transition-all cursor-pointer"
@@ -255,7 +283,12 @@ export const AdminLiveUserMonitor: React.FC = () => {
         }
       />
 
-      {/* 4 STATS METRICS BARS */}
+      {/* RENDER OPERATIONAL GUIDE IF SELECTED */}
+      {viewMode === 'OPERATIONAL_GUIDE' ? (
+        <AdminOperationalGuide />
+      ) : (
+        <>
+          {/* 4 STATS METRICS BARS */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-2xs">
           <div className="flex items-center justify-between text-slate-500 text-[10px] font-extrabold uppercase">
@@ -615,6 +648,8 @@ export const AdminLiveUserMonitor: React.FC = () => {
         </div>
 
       </div>
+        </>
+      )}
 
       {/* EDIT CREDENTIALS & PROFILE MODAL */}
       {editingUser && (
