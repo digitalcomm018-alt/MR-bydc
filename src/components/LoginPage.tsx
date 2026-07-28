@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { UserProfile } from '../types';
 import { Footer } from './Footer';
+import leafWatermarkImg from '../assets/images/autumn_leaf_watermark_1785254790377.jpg';
 import {
   Shield,
   User,
@@ -266,9 +267,31 @@ export const LoginPage: React.FC = () => {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Floating White Login Card */}
+          {/* RIGHT COLUMN: Floating Login Card with Image 1 Red Leaf Watermark Background */}
           <div className="lg:col-span-6 flex justify-center lg:justify-end">
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl border border-slate-100 p-8 sm:p-10 relative">
+            <div className="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border border-rose-100/90 p-8 sm:p-10 relative overflow-hidden">
+              {/* Image 1 Red Autumn Leaf Watermark Background */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center pointer-events-none opacity-20 transition-opacity"
+                style={{ backgroundImage: `url(${leafWatermarkImg})` }}
+              />
+              {/* High-definition Leaf Graphic Vector Watermark */}
+              <svg 
+                className="absolute -right-16 -bottom-16 w-80 h-80 opacity-25 pointer-events-none"
+                viewBox="0 0 200 200"
+              >
+                <path
+                  d="M100 15 C140 35 180 70 170 130 C160 170 120 185 100 190 C80 185 40 170 30 130 C20 70 60 35 100 15 Z"
+                  fill="#c2185b"
+                />
+                <path d="M100 15 L100 190" stroke="#fbcfe8" strokeWidth="3" fill="none" />
+                <path d="M100 60 L140 40 M100 90 L155 70 M100 120 L150 105 M100 150 L135 140" stroke="#fef08a" strokeWidth="2.5" fill="none" />
+                <path d="M100 60 L60 40 M100 90 L45 70 M100 120 L50 105 M100 150 L65 140" stroke="#fef08a" strokeWidth="2.5" fill="none" />
+              </svg>
+              {/* Soft overlay gradient to ensure clean text contrast */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/75 to-white/90 pointer-events-none" />
+
+              <div className="relative z-10">
               
               {/* Header Icon */}
               <div className="flex justify-center mb-4">
@@ -396,7 +419,7 @@ export const LoginPage: React.FC = () => {
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-slate-200" />
                 </div>
-                <span className="relative bg-white px-3 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
+                <span className="relative bg-white/80 backdrop-blur-xs px-3 text-[11px] font-bold text-slate-400 uppercase tracking-widest">
                   OR
                 </span>
               </div>
@@ -422,6 +445,7 @@ export const LoginPage: React.FC = () => {
                 </button>
               </div>
 
+              </div>
             </div>
           </div>
 
