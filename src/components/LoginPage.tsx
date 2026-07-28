@@ -341,12 +341,12 @@ export const LoginPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Primary Blue Login Button */}
+                {/* Primary Login Button with Image 1 Light Green background */}
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-lg shadow-blue-600/30 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-[0.99]"
+                  className="w-full py-3.5 rounded-xl bg-[#b2f2bb] hover:bg-[#a0ebac] text-slate-950 font-black text-sm shadow-md shadow-emerald-600/20 border border-emerald-400/60 transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-[0.99]"
                 >
-                  <LogIn className="w-4 h-4 stroke-[2.5]" />
+                  <LogIn className="w-4 h-4 stroke-[2.5] text-slate-950" />
                   <span>Login</span>
                 </button>
               </form>
