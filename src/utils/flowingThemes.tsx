@@ -142,7 +142,7 @@ export const FlowingBox: React.FC<{
 };
 
 /**
- * Reusable Flowing Page Header Banner (Image 3 Spotlight Background)
+ * Reusable Flowing Page Header Banner (Image 2 Green-to-Orange Gradient with Wireframe Sphere)
  */
 export const FlowingHeader: React.FC<{
   themeIndex?: number;
@@ -154,39 +154,46 @@ export const FlowingHeader: React.FC<{
 }> = ({ title, subtitle, badgeText, icon: Icon, actions }) => {
   return (
     <div
-      className="rounded-2xl p-6 shadow-2xl relative overflow-hidden transition-all duration-300 bg-gradient-to-br from-[#F57C00] via-[#EA580C] to-[#C2410C] border-2 border-amber-300/80 text-white mb-6"
+      className="rounded-2xl p-6 shadow-2xl relative overflow-hidden transition-all duration-300 bg-gradient-to-r from-[#15803d] via-[#0b4d26] via-45% to-[#d95300] border-2 border-emerald-300/40 text-white mb-6"
     >
-      {/* Spotlight Beam from Top-Left (Image 3 Stage Lighting Effect) */}
+      {/* Top-Left Vibrant Green Glow (Image 2 Top-Left Light Effect) */}
       <div 
         aria-hidden="true" 
-        className="absolute -top-28 -left-24 w-96 h-96 bg-gradient-to-br from-yellow-200/80 via-amber-300/40 to-transparent rounded-full blur-2xl pointer-events-none" 
-      />
-      <div 
-        aria-hidden="true" 
-        className="absolute -top-12 left-10 w-72 h-[220%] bg-gradient-to-b from-yellow-100/50 via-amber-200/20 to-transparent transform -rotate-45 pointer-events-none origin-top-left" 
+        className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-400/35 rounded-full blur-3xl pointer-events-none" 
       />
 
-      {/* Stage Shelf Line at Bottom (Image 3 Bottom Shelf Line) */}
+      {/* Right Orange Glow (Image 2 Right Side Soft Glow) */}
       <div 
         aria-hidden="true" 
-        className="absolute bottom-0 left-0 right-0 h-2.5 bg-gradient-to-r from-yellow-300 via-amber-300 to-yellow-400 border-t border-amber-200/80 shadow-md pointer-events-none" 
+        className="absolute -top-10 -right-10 w-96 h-96 bg-amber-500/30 rounded-full blur-3xl pointer-events-none" 
       />
 
-      {/* Ambient background glow accents */}
-      <div aria-hidden="true" className="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-yellow-300/20 blur-3xl pointer-events-none" />
+      {/* Wireframe Sphere Overlay on Right Side (Image 2 Wireframe Sphere Graphic) */}
+      <svg 
+        className="absolute right-6 sm:right-16 top-1/2 -translate-y-1/2 w-48 sm:w-60 h-48 sm:h-60 opacity-35 pointer-events-none" 
+        viewBox="0 0 100 100"
+      >
+        <circle cx="50" cy="50" r="36" fill="none" stroke="#ffedd5" strokeWidth="0.7" />
+        <ellipse cx="50" cy="50" rx="36" ry="18" fill="none" stroke="#fed7aa" strokeWidth="0.7" transform="rotate(25 50 50)" />
+        <ellipse cx="50" cy="50" rx="36" ry="18" fill="none" stroke="#fed7aa" strokeWidth="0.7" transform="rotate(-25 50 50)" />
+        <ellipse cx="50" cy="50" rx="36" ry="18" fill="none" stroke="#fed7aa" strokeWidth="0.7" transform="rotate(65 50 50)" />
+        <ellipse cx="50" cy="50" rx="36" ry="18" fill="none" stroke="#fed7aa" strokeWidth="0.7" transform="rotate(-65 50 50)" />
+        <ellipse cx="50" cy="50" rx="36" ry="18" fill="none" stroke="#ffedd5" strokeWidth="0.7" transform="rotate(90 50 50)" />
+        <circle cx="50" cy="50" r="26" fill="none" stroke="#ffedd5" strokeWidth="0.5" />
+      </svg>
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
         <div>
           <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wider mb-2">
-            <Icon className="w-4 h-4 text-amber-200" />
-            <span className="px-3 py-1 rounded-full bg-slate-950/80 text-amber-200 border border-amber-400/60 font-black shadow-sm">
+            <Icon className="w-4 h-4 text-emerald-200" />
+            <span className="px-3 py-1 rounded-full bg-slate-950/80 text-emerald-200 border border-emerald-400/60 font-black shadow-sm">
               {badgeText}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md">
             {title}
           </h1>
-          <p className="text-xs sm:text-sm text-amber-50/95 font-semibold mt-1.5 max-w-2xl leading-relaxed drop-shadow-xs">
+          <p className="text-xs sm:text-sm text-emerald-50/95 font-semibold mt-1.5 max-w-2xl leading-relaxed drop-shadow-xs">
             {subtitle}
           </p>
         </div>
