@@ -46,12 +46,12 @@ export const FLOWING_THEMES: FlowingTheme[] = [
   },
   {
     id: 4,
-    name: 'Deep Cyan Ocean (Image 2 Right Background)',
-    bgClass: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009bca] via-[#006080] to-[#003850] border-2 border-cyan-400/50 text-white shadow-xl',
-    cardBgClass: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#009bca] via-[#006080] to-[#003850] text-white border-cyan-400/50 shadow-xl',
+    name: 'Geometric Ocean Star (Image 2 Background)',
+    bgClass: 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#00a8cc] via-[#005b7f] to-[#071f38] border-2 border-cyan-400/50 text-white shadow-xl relative',
+    cardBgClass: 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#00a8cc] via-[#005b7f] to-[#071f38] text-white border-cyan-400/50 shadow-xl relative',
     textClass: 'text-white',
     borderClass: 'border-cyan-400/50',
-    badgeClass: 'bg-[#4A2000] text-amber-200 border border-amber-500/30 font-black',
+    badgeClass: 'bg-slate-950/80 text-cyan-200 border border-cyan-400/50 font-black',
     accentGlow: 'from-cyan-300/40 via-blue-400/20 to-transparent'
   },
   {
@@ -131,6 +131,22 @@ export const FlowingBox: React.FC<{
 
   return (
     <div className={boxClasses}>
+      {/* Image 2 Geometric Star Lattice Pattern for Theme 4 */}
+      {(theme.id === 4 || themeIndex === 4) && (
+        <svg className="absolute inset-0 w-full h-full opacity-35 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="geometric-star-grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 30,0 L 60,30 L 30,60 L 0,30 Z" fill="none" stroke="#38bdf8" strokeWidth="0.8" opacity="0.6" />
+              <path d="M 0,0 L 60,60 M 60,0 L 0,60" fill="none" stroke="#00e5ff" strokeWidth="0.6" opacity="0.4" />
+              <path d="M 30,0 L 30,60 M 0,30 L 60,30" fill="none" stroke="#38bdf8" strokeWidth="0.6" opacity="0.4" />
+              <polygon points="30,10 44,16 50,30 44,44 30,50 16,44 10,30 16,16" fill="none" stroke="#7dd3fc" strokeWidth="0.8" opacity="0.7" />
+              <polygon points="30,0 38,22 60,30 38,38 30,60 22,38 0,30 22,22" fill="none" stroke="#38bdf8" strokeWidth="0.7" opacity="0.6" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#geometric-star-grid)" />
+        </svg>
+      )}
+
       {/* Decorative Wave Ambient Flow Accent */}
       <div
         aria-hidden="true"
