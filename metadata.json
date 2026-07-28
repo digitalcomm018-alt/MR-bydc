@@ -1,0 +1,10 @@
+{
+  "name": "Remix PharmaPulse MR",
+  "description": "Comprehensive Medical Representative Field Operations software with Daily Call Reporting (DCR), Doctor CRM, Tour Planner, RCPA Competitor Audit, Sample Inventory, Expense Claims, E-Detailing, and AI Territory Analytics.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
